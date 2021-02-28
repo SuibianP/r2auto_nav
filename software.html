@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Software</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reset.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/theme/white.css" id="theme">
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/monokai.css" id="highlight-theme">
+        <style>
+.reveal .slide * p { text-align: left; }
+p { text-align: left; }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                <section>
+                    <h1>Main Algorithm</h1>
+                    <h2>Maze Solving</h2>
+                    <h2>Target Detection and Projection</h2>
+                </section>
+                <section>
+                    <div class="r-stretch" style="display: flex; align-items: center;" id="overall-diagram"></div>
+                </section>
+                </section>
+                <section>
+                <section>
+                    <h1>Maze Solving Overview</h1>
+                    <ul>
+                        <li>Maze is modelled as a nonsimple weighted undirected graph</li>
+                        <li>Modified wall follower algorithm</li>
+                        <li>Due to the limited number of nodes, can use brute force (exhaustion) with no time/space complexity considerations
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <div class="r-stretch" style="display: flex; align-items: center;" id="maze-diagram"></div>
+                </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>"Move forward with purpose."</h2>
+                        <ul>
+                            <li>Follow the wall when there is no different edges to choose</li>
+                            <li>Attempt to stay in the middle between the two walls by constantly adjusting the direction</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2><code>scan</code> Pattern</h2>
+                        <ul>
+                            <li>Near <code>inf.</code> values in two opposite directions</li>
+                            <li>A sudden jump to smaller values in other directions</li>
+                        </ul>
+                        <svg width="80%" height="66%">
+                            <rect fill=none stroke=black stroke-width=1% width="100%" height="100%"/>
+                            <circle cx="30%" cy="50%" fill="purple" fill-opacity="0.5" r="15%">
+                            <animateMotion dur="5s" repeatCount="indefinite" path="m0,0 l300,0 l-300,0 z" />
+                            </circle>
+                            <circle cx="30%" cy="50%" r="1%">
+                            <animateMotion dur="5s" repeatCount="indefinite" path="m0,0 l300,0 l-300,0 z" />
+                            </circle>
+                        </svg>
+
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Two roads diverged in a yellow wood, <br>And sorry I could not travel both (now)</h2>
+                        <p>When there is more than one routes present, <br>first determine if the current vertex has already been encountered.</p>
+                    </section>
+                    <section>
+                        <p><b>If so</b>,<br>find the shortest known path to the previous vertex with untried path.<br></p>
+                        <p><b>Otherwise,</b></p>
+                        <ul>
+                            <li>Record the edge weight from the absolute position of the bot</li>
+                            <li>Mark the current node as a crossing intersection</li>
+                            <li>Record the direction of each way</li>
+                            <li>Choose a way to go and mark it attempted</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2><code>scan</code> Pattern</h2>
+                        <ul>
+                            <li>Near <code>inf.</code> values in more than two directions or two vertical directions</li>
+                            <li>A sudden jump to smaller values in other directions</li>
+                        </ul>
+                        <svg width="100%" height="100%">
+                            <rect fill=none stroke=black stroke-width=1% width="100%" height="60%"/>
+                            <rect fill=none stroke=black stroke-width=1% x=50% width="10%" height="100%"/>
+                            <circle cx="55%" cy="30%" fill="purple" fill-opacity="0.5" r="10%"/>
+                            <circle cx="55%" cy="30%" r="0.5%"/>
+                        </svg>
+
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>"A dead end street is a good place to turn around."</h2>
+                        <p>Append this node</p>
+                        <p>Find the shortest known path to the previous vertex with untried path.</p>
+                    </section>
+                    <section>
+                        <h2><code>scan</code> Pattern</h2>
+                        <ul>
+                            <li>Near <code>inf.</code> values in one direction</li>
+                            <li>A sudden jump to smaller values in other directions</li>
+                        </ul>
+                        <svg width="80%" height="66%">
+                            <rect fill=none stroke=black stroke-width=1% width="100%" height="100%"/>
+                            <circle cx="3%" cy="50%" fill="purple" fill-opacity="0.5" r="15%">
+                            <animateMotion dur="3s" repeatCount="indefinite" path="m0,0 l70,0 l-70,0 z" />
+                            </circle>
+                            <circle cx="3%" cy="50%" r="1%">
+                            <animateMotion dur="3s" repeatCount="indefinite" path="m0,0 l70,0 l-70,0 z" />
+                            </circle>
+                        </svg>
+
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Target Projection Overview</h1>
+                        <ul>
+                            <li>Use <code>OpenCV</code> for IR image identification</li>
+                            <li>Signal maze solving node for control priority once target is confirmed</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Target Identification</h2>
+                        <ol>
+                            <li>Do a binary threshold on the grayscale input image</li>
+                            <li>Apply morphological operations to eliminate noise</li>
+                            <li>Detect if there is a large enough spot to be regarded as the target. If so, signal for control.</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h2>Target Identification</h2>
+                        <ol>
+                            <li>Traverse the current edge to determine the point where IR is strongest</li>
+                            <li>Make a full turnaround at the point to find the best orientation to the target</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h2>Shooting</h2>
+                        <p>If there is a wall blocking the target, it will blindly shoot the balls at different angles according to the intensity of the bright spot.<br>
+                        Otherwise it will try to detect the distance of the target using LiDAR as a reference.</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Fail-safe mechanisms</h1>
+                        <h2>Freeze protection</h2>
+                        <h2>Timeout</h2>
+                    </section>
+                    <section>
+                        <h2>Freeze Protection</h2>
+                        <p>One bash script spawns the actual working node.</p>
+                        <ul>
+                            If
+                            <li>There is no callback operation within threshold</li>
+                            <li>The node encounters either too many exceptions within a given duration/an unrecoverable state (<code>SIGSEGV</code>, <code>SIGBUS</code>, etc.)</li>
+                        </ul>
+                        <p>the script will terminate the process with <code>SIGKILL</code> and restart</p>
+                    </section>
+                    <section>
+                        <h2>Timeout</h2>
+                        <p>Every single non-trivial operation must have a timeout value after which it will be abandoned.</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h1>Miscellaneous</h1>
+                    </section>
+                    <section>
+                        <h2>Power Consumption</h2>
+                        <p>Possibly use a minimal ROS-supported OS image. Unused services/processes/devices(LAN/HDMI/Bluetooth/LED/audio)/etc. should be deactivated. Strictly no GUI apps/DE/WM. <a href="https://github.com/SuibianP/r2auto_nav/wiki/Power-Saving">Our repo wiki</a></p>
+                        <p>Computationally intensive jobs will be transferred to another higher performance computer to process via ssh tunnel.</p>
+                        <p>Even to the extent of doing everything on a remote machine, with the onboard SBC only serving as a Internet device for OpenCR.</p>
+                        <p>CPU, I/O governors, CPU clock and cores can be tweaked by experiment to be at the most power efficient setting without disrupting service.</p>
+                    </section>
+                    <section>
+                        <h2>Programming Languages</h2>
+                        <ul>
+                            <li>Python 3 (Possibly C++ if computational performance turns out to be unsatisfactory)</li>
+                            <li>Shell script (POSIX-compliant, no bash extensions)</li>
+                        </ul>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/notes/notes.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.0/plugin/math/math.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+        <script src="https://flowchart.js.org/flowchart-latest.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                hash: true,
+                width: "100%",
+
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
+            });
+        </script>
+        <script>
+            flowchart.parse(`st=>start
+                             act=>subroutine: Actuation control
+                             par=>operation: Monitoring parent process
+                             img=>subroutine: Target detection
+                             para=>parallel: Parallel
+                             st->par->para
+                             para(path1, left)->act
+                             para(path2, right)->img`).drawSVG('overall-diagram', {scale: 2});
+            flowchart.parse(`msg=>inputoutput: scan topic message
+                             state=>condition: State pattern detection
+                             Dead-end/Visited vertex?
+                             ch=>condition: Multiple choices?
+                             dt=>operation: Record and choose one way forward
+                             mf=>operation: Continue forward
+                             rt=>operation: Record and return to previous unfinished vertex
+                             msg->state
+                             state(yes)->rt
+                             state(no)->ch
+                             ch(yes, right)->dt->mf
+                             ch(no)->mf`).drawSVG('maze-diagram', {scale: 1.5});
+        </script>
+    </body>
+</html>
