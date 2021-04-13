@@ -11,6 +11,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Bool
 from nav_msgs.msg import Odometry, OccupancyGrid
 from geometry_msgs.msg import Twist
 import numpy as np
@@ -37,6 +38,14 @@ class Nav(Node):
         self.get_logger().info('Initialising Nav node')
         self.cmd_pub = self.create_publisher(Twist, 'cmd_vel', 10) # TODO: why depth 10? QoS?
         self.get_logger().info('`cmd_vel` topic publisher created.')
+        self.sht_sub = self.create_subscription(
+            Bool,
+            'shoot',
+            self.shoot_callback,
+            qos_profile_sensor_data
+            )
+
+
         self.scan_sub = self.create_subscription(
             LaserScan,
             'scan',
@@ -67,6 +76,10 @@ class Nav(Node):
         self.goal = None
         self.plan = None
         self.pos_grid = None
+        self.shoot = False
+
+    def shoot_callback(self, msg):
+        self.shoot = msg.data
 
     def scan_callback(self, msg):
         """
@@ -261,6 +274,9 @@ class Nav(Node):
         SAFE_DIST = 0.3 # TODO
         curr = 0 # current point in plan
         while (curr < self.plan.shape[0]) and (np.linalg.norm(self.pos_grid - self.goal) >= THRESH): # not approaching goal yet
+            if self.shoot:
+                self.stop()
+                break
             self.get_logger().info('Not approaching goal yet')
             self.get_logger().info(f'Current distance to waypoint {curr}: {np.linalg.norm(self.pos_grid - self.plan[curr])}')
             while (curr < self.plan.shape[0]) and \
