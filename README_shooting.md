@@ -49,16 +49,16 @@ The overall flow of our algorithm is as follows:
 
 * The test files in this repository are simple tests from when I was testing each of the devices independently. Not all of them can be executed without errors because some of them were used to determine if something was feasible or not. The files and their descriptions are outlined in the table below
 
-|File                |Description                                                                         |
-|--------------------|------------------------------------------------------------------------------------|
-|continuous_test.py  |Test the functionality of the continuous servo                                      |
-|flywheel_test.py    |Test the DC motor with the mosfet and GPIO pins (failed because mosfet burnt)       |
-|fun\_with\_servos.py|Test controlling the angle of servos                                                |
-|pitch_test.py       |Test aiming with tilting servo                                                      |
-|pixels_test.py      |Test the AMG8833 thermal camera functionality using AMG's old library               |
-|pixels_test2.py     |Test the AMG8833 thermal camera functionality using AMG's newer library             |
-|rotation_testing.py |Test controlling the clockwise and anti-clockwise rotation of the turtlebot         |
-|shooter_test.py     |Test the shooting portion without the aiming portion                                |
+|File                |Description                                                                                                      |
+|--------------------|-----------------------------------------------------------------------------------------------------------------|
+|continuous_test.py  |Test the functionality of the continuous servo                                                                   |
+|flywheel_test.py    |Test the DC motor with the mosfet and GPIO pins (failed because mosfet burnt)                                    |
+|fun\_with\_servos.py|Test controlling the angle of servos                                                                             |
+|manual_tilt.py      |Allow for manual angling of servo with input statement **(used for calibration of servo to initial angle 90)**   |
+|pixels_test.py      |Test the AMG8833 thermal camera functionality using AMG's old library                                            |
+|pixels_test2.py     |Test the AMG8833 thermal camera functionality using AMG's newer library                                          |
+|rotation_testing.py |Test controlling the clockwise and anti-clockwise rotation of the turtlebot                                      |
+|shooter_test.py     |Test the shooting portion without the aiming portion                                                             |
 
 
 
